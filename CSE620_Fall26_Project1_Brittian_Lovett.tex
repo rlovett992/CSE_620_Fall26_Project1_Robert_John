@@ -1,0 +1,186 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+%Template version as of 6/27/2024
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, urlcolor=blue]{hyperref}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\makeatletter
+\def\subsubsection{\@startsection{subsubsection}{3}{\z@}%
+  {1.5ex plus 1ex minus .2ex}%
+  {1ex plus .2ex}%
+  {\normalfont\normalsize}}
+\makeatother
+
+\begin{document}
+
+\title{
+    CSE 620 Project 1: Gradient Descent Variants\\[0.5em]
+    \Large Fall 2026
+}
+
+\author{
+    \IEEEauthorblockN{John Brittian}
+    \and
+    \IEEEauthorblockN{Robert Lovett}
+}
+
+\maketitle
+
+\begin{abstract}
+This report documents a wellthought-out and precise carrying out of the first project for CSE 620.
+\end{abstract}
+
+\begin{IEEEkeywords}
+heuristics, gradient descent, optimization, fun
+\end{IEEEkeywords}
+
+\section{Introduction}
+The objective of this project is to implement and explore several variants of the gradient descent optimization algorithm.
+Each variant will be used to minimize each of the following functions. The only
+constraint is that these functions are all of the form $f: \mathbb{R}^2 \to \mathbb{R}$,
+so we're minimizing over the entire plane.
+
+\begin{equation}
+    f_1(x,y) = x^2 + y^2
+\end{equation}
+
+\begin{equation}
+    f_2(x,y) = (1-x)^2 + 100(y - x^2)^2
+\end{equation}
+
+\begin{equation}
+    f_3(x,y) = x^2 + y^2 + 10\cos{x} + 10\cos{y}
+\end{equation}
+
+We've implemented and experimented with:
+
+\begin{enumerate}
+    \item Vanilla Gradient Descent
+    \item Newton's Method (w/ Hessian)
+    \item AdaGrad
+    \item Adam (w/ $\beta_1=0.9$, $\beta_2=0.999$, $\epsilon=1\mathrm{e}-8$)
+\end{enumerate}
+
+\section{Methods}
+
+Here we describe in more detail the gradient descent algorithms used, and our
+implementations of them.
+
+\subsection{Gradient Descent Algorithms}
+
+\subsubsection{Vanilla Gradient Descent}
+
+This one isn't anything crazy. This algorithm simply starts with a random initial point
+(here we use a fixed initial point for consistency), then iteratively updates
+the point using the gradient of $f$:
+
+\[
+    \nabla f = \begin{bmatrix}
+        \frac{\partial f}{\partial x} \\[0.5em]
+        \frac{\partial f}{\partial y}
+    \end{bmatrix}
+\]
+
+This algorithm in pseudocode looks like this:
+
+\begin{algorithmic}[1]
+    \STATE Initialize $(x,y) \gets (x_0,y_0)$
+    \STATE Initialize $\alpha \gets \alpha_0$
+    \FOR{$t=1,\ldots,T$}
+        \STATE $(x,y) \gets (x,y) - \alpha \nabla f(x,y)$
+
+    \ENDFOR
+    \STATE \textbf{return} $(x,y)$
+\end{algorithmic}
+
+\subsubsection{Newton's Method (w/ Hessian)}
+
+Newton's Method is a second-order optimization algorithm that uses both
+the gradient and the Hessian matrix of $f$:
+
+\[
+    \boldmath{H}_f = \begin{bmatrix}
+        \frac{\partial^2 f}{\partial x^2} & \frac{\partial^2 f}{\partial x \partial y} \\[0.5em]
+        \frac{\partial^2 f}{\partial y \partial x} & \frac{\partial^2 f}{\partial y^2}
+    \end{bmatrix}
+\]
+
+This algorithm in pseudocode looks like this:
+
+\begin{algorithmic}[1]
+    \STATE Initialize $(x,y) \gets (x_0,y_0)$
+    \STATE Initialize $\alpha \gets \alpha_0$
+    \FOR{$t=1,\ldots,T$}
+        \STATE $(x,y) \gets (x,y) - \alpha H_f^{-1}(x,y) \nabla f(x,y)$
+
+    \ENDFOR
+    \STATE \textbf{return} $(x,y)$
+\end{algorithmic}
+
+\subsubsection{AdaGrad}
+
+AdaGrad is an adaptive learning rate optimization algorithm that adjusts the learning rate for each parameter based on the historical gradients.
+It accumulates the squared gradients and uses them to scale the learning rate.
+Some implementations the entire outer product of past gradients with itself,
+but ours uses only the diagonal of that matrix, which is much more
+computationally efficient.
+
+This algorithm in pseudocode looks like this:
+
+\begin{algorithmic}[1]
+    \STATE Initialize $(x,y) \gets (x_0,y_0)$
+    \STATE Initialize $\alpha \gets \alpha_0$
+    \STATE Initialize $g_{acc} \gets (0, 0)$
+    \FOR{$t=1,\ldots,T$}
+        \STATE $g \gets \nabla f(x,y)$
+        \STATE $g_{acc} \gets g_{acc} + g \odot g$
+        \STATE $(x,y) \gets (x,y) - \alpha \cdot \left(g_{acc}\right)^{\odot -\frac12} \cdot \nabla f(x,y)$
+    \ENDFOR
+    \STATE \textbf{return} $(x,y)$
+\end{algorithmic}
+
+where $\odot$ denotes the \href{https://en.wikipedia.org/wiki/Hadamard_product_(matrices)}{Hadamard operations}.
+
+\subsubsection{Adam}
+
+Adam is essentially an intelligent combination of AdaGrad with momentum. It tracks
+an exponentially decaying average of past gradients and squared gradients, and uses these to adapt the learning rate for each parameter.
+In this project we use the following values for Adam's unique hyperparameters:
+
+\[\beta_1=0.9\qquad\beta_2=0.999\qquad\epsilon=1\mathrm{e}-8\]
+
+This algorithm in pseudocode looks like this:
+
+\begin{algorithmic}[1]
+    \STATE Initialize $(x,y) \gets (x_0,y_0)$
+    \STATE Initialize $\alpha \gets \alpha_0$
+    \STATE Initialize $m \gets (0, 0)$
+    \STATE Initialize $v \gets (0, 0)$
+    \FOR{$t=1,\ldots,T$}
+        \STATE $g \gets \nabla f(x,y)$
+        \STATE $m \gets \beta_1 m + (1 - \beta_1)g$
+        \STATE $v \gets \beta_2 v + (1 - \beta_2)\left(g \odot g\right)$
+        \STATE $\hat{m} \gets \frac{m}{1 - \beta_1^t}$
+        \STATE $\hat{v} \gets \frac{v}{1 - \beta_2^t}$
+        \STATE $(x,y) \gets (x,y) - \alpha \cdot \left(\hat{m} \oslash \left(\sqrt{\hat{v}} + \epsilon\right)\right)$
+    \ENDFOR
+    \STATE \textbf{return} $(x,y)$
+\end{algorithmic}
+
+where $\oslash$ denotes the \href{https://en.wikipedia.org/wiki/Hadamard_product_(matrices)#Analogous_operations}{Hadamard division}.
+
+
+\section*{Acknowledgment}
+
+We would like to thank and acknowledge our professor Dr. Olfa Nasraoui for her guidance and support throughout this project.
+
+\end{document}

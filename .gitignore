@@ -216,3 +216,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+# John LaTeX compilation crap
+*.synctex*
+temp
+*.aux
+*.fdb_latexmk*
+*.fls
