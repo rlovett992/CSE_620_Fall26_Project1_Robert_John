@@ -10,6 +10,7 @@
 \usepackage[colorlinks=true, urlcolor=blue]{hyperref}
 \usepackage{textcomp}
 \usepackage{xcolor}
+\usepackage{float}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
@@ -178,7 +179,115 @@ This algorithm in pseudocode looks like this:
 
 where $\oslash$ denotes the \href{https://en.wikipedia.org/wiki/Hadamard_product_(matrices)#Analogous_operations}{Hadamard division}.
 
+\section{Results}
+The results of each algorithm are shown below.
 
+\subsection{Adagrad}
+
+\subsubsection{Cosine Bumps}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.40\textwidth]{cosine_bumps_start_0.5_neg1.5_lr_0.1.png}
+    \caption{Adagrad on the Cosine Bumps function}
+    \label{fig:adagrad_cosine}
+\end{figure}
+
+\subsubsection{Quadratic}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.40\textwidth]{quadratic_start_0.5_neg1.5_lr_0.1.png}
+    \caption{Adagrad on the Quadratic function}
+    \label{fig:adagrad_quadratic}
+\end{figure}
+
+\subsubsection{Rosenbrock}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.40\textwidth]{rosenbrock_start_0.5_neg1.5_lr_0.1.png}
+    \caption{Adagrad on the Rosenbrock function}
+    \label{fig:adagrad_rosenbrock}
+\end{figure}
+
+
+\subsection{ADAM}
+
+\subsubsection{Cosine Bumps}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.40\textwidth]{adam/cosine_bumps_start_0.5_neg1.5_lr_0.01.png}
+    \caption{ADAM on the Cosine Bumps function}
+    \label{fig:adam_cosine}
+\end{figure}
+
+\subsubsection{Quadratic}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.40\textwidth]{adam/quadratic_start_0.5_neg1.5_lr_0.01.png}
+    \caption{ADAM on the Quadratic function}
+    \label{fig:adam_quadratic}
+\end{figure}
+
+\subsubsection{Rosenbrock}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.40\textwidth]{adam/rosenbrock_start_0.5_neg1.5_lr_0.1.png}
+    \caption{ADAM on the Rosenbrock function}
+    \label{fig:adam_rosenbrock}
+\end{figure}
+
+
+\subsection{Gradient Descent}
+
+\subsubsection{Cosine Bumps}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.40\textwidth]{adam/newton/gradient_descent/cosine_bumps_start_0.5_neg1.5_lr_0.01.png}
+    \caption{Gradient Descent on the Cosine Bumps function}
+    \label{fig:gd_cosine}
+\end{figure}
+
+\subsubsection{Quadratic}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.40\textwidth]{adam/newton/gradient_descent/quadratic_start_0.5_neg1.5_lr_0.01.png}
+    \caption{Gradient Descent on the Quadratic function}
+    \label{fig:gd_quadratic}
+\end{figure}
+
+\subsubsection{Rosenbrock}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.40\textwidth]{adam/newton/gradient_descent/rosenbrock_start_0.5_neg1.5_lr_0.001.png}
+    \caption{Gradient Descent on the Rosenbrock function}
+    \label{fig:gd_rosenbrock}
+\end{figure}
+
+
+\subsection{Newton}
+
+\subsubsection{Cosine Bumps}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.40\textwidth]{adam/newton/cosine_bumps_start_0.5_neg1.5_lr_0.5.png}
+    \caption{Newton's Method on the Cosine Bumps function}
+    \label{fig:newton_cosine}
+\end{figure}
+
+\subsubsection{Quadratic}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.40\textwidth]{adam/newton/quadratic_start_0.5_neg1.5_lr_0.5.png}
+    \caption{Newton's Method on the Quadratic function}
+    \label{fig:newton_quadratic}
+\end{figure}
+
+\subsubsection{Rosenbrock}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.40\textwidth]{adam/newton/rosenbrock_start_0.5_neg1.5_lr_0.5.png}
+    \caption{Newton's Method on the Rosenbrock function}
+    \label{fig:newton_rosenbrock}
+\end{figure}
 \section*{Acknowledgment}
 
 We would like to thank and acknowledge our professor Dr. Olfa Nasraoui for her guidance and support throughout this project.
